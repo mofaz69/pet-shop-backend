@@ -9,11 +9,6 @@ app.use(express.json());
 
 app.use("/pet", petRouter);
 
-// app.get('/',(req,res)=>{
-//     // read file
-//     // send content as a response
-// })
-
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log("Server is listening on port", PORT);
