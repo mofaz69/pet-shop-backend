@@ -5,6 +5,7 @@ const petRouter = new Router();
 // breed of animal (Poodle, Siamese)
 const PETS = [
   {
+    id: "1",
     type: "cat",
     name: "avi",
     color: "white",
@@ -19,26 +20,33 @@ const PETS = [
   },
 ];
 
-exports.CreateUser = (PETS) => {
-  const user = new User(PETS);
-  return user.save();
-};
+// exports.CreateUser = (PETS) => {
+//   const user = new User(PETS);
+//   return user.save();
+// };
 
-app.get("/users/userId:", [UsersController.getById]);
+// exports.getById = (req, res) => {
+//   UserModel.findById(req.params.userId).then((results) => {
+//     res.status(200).send(results);
+//   });
+// };
+// exports.findById = (id) => {
+//   return User.findById(id).then((results) => {
+//     results = result.toJSON();
+//     delete results._id;
+//     delete results._v;
+//     return results;
+//   });
+// };
 
-exports.getById = (req, res) => {
-  UserModel.findById(req.params.userId).then((results) => {
-    res.status(200).send(results);
-  });
-};
-exports.getById = (id) => {
-  return User.findById(id).then((results) => {
-    results = result.toJSON();
-    delete results._id;
-    delete results._v;
-    return results;
-  });
-};
+// http://localhost:3000/pets/1
+// petId = 1
+// params - parameters in the request' urls
+petRouter.get("/:petId", (req, res) => {
+  const petId = req.params.petId; //1
+  const pet = PETS.find((pet) => pet.id === petId);
+  res.json(pet);
+});
 
 petRouter.get("/", function (req, res) {
   console.log("getting all pets");
