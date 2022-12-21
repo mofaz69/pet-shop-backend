@@ -1,4 +1,4 @@
-const { Router } = require("express");
+const { Router, application } = require("express");
 const petRouter = new Router();
 
 //Type (dog, cat), Name, Adoption Status, Picture, Height, Weight, Color, Bio, Hypoallergenic (yes/no), dietary restrictions,
@@ -18,6 +18,27 @@ const PETS = [
     breed: "Siamese",
   },
 ];
+
+exports.CreateUser = (PETS) => {
+  const user = new User(PETS);
+  return user.save();
+};
+
+app.get("/users/userId:", [UsersController.getById]);
+
+exports.getById = (req, res) => {
+  UserModel.findById(req.params.userId).then((results) => {
+    res.status(200).send(results);
+  });
+};
+exports.getById = (id) => {
+  return User.findById(id).then((results) => {
+    results = result.toJSON();
+    delete results._id;
+    delete results._v;
+    return results;
+  });
+};
 
 petRouter.get("/", function (req, res) {
   console.log("getting all pets");
