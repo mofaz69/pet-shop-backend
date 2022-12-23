@@ -20,25 +20,6 @@ const PETS = [
   },
 ];
 
-// exports.CreateUser = (PETS) => {
-//   const user = new User(PETS);
-//   return user.save();
-// };
-
-// exports.getById = (req, res) => {
-//   UserModel.findById(req.params.userId).then((results) => {
-//     res.status(200).send(results);
-//   });
-// };
-// exports.findById = (id) => {
-//   return User.findById(id).then((results) => {
-//     results = result.toJSON();
-//     delete results._id;
-//     delete results._v;
-//     return results;
-//   });
-// };
-
 // http://localhost:3000/pets/1
 // petId = 1
 // params - parameters in the request' urls
