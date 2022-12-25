@@ -1,15 +1,25 @@
 // this file should contain user routes
 const { Router } = require("express");
 const userRouter = new Router();
+const bcrypt = require("bcrypt");
 
 const randomId = () => Math.random().toString(36).slice(2);
 
-function hashPassword(plainPassword) {
-  // hash password using bcrypt
-  const hashedPassword = plainPassword;
+const saltRounds = 10;
 
+async function hashPassword(plainPassword) {
+  const salt = await bcrypt.genSalt(saltRounds);
+  const hashedPassword = await bcrypt.hash(plainPassword, salt);
   return hashedPassword;
 }
+
+// function hashPassword(plainPassword) {
+//   // hash password using bcrypt
+
+//   const hashedPassword = plainPassword;
+
+//   return hashedPassword;
+// }
 
 const USERS = [
   {
@@ -22,17 +32,36 @@ const USERS = [
   },
 ];
 
-/// login \ signin
-// post | /signin
+// POST  localhost:3000/user/login
+userRouter.post("/login", async (request, response) => {
+  // email: "user@example.com"
+  // password: "123456"
+  const { email, password } = request.body;
+  const result = USERS.find((user) => user.email === email);
+  bcrypt.compareSync(password, result.password);
+  // result: user / undefined
+  if (!result) {
+    return response.status(400).send({ message: "Invalid Email or Password" });
+  }
+
+  response.json({
+    email: result.email,
+    id: result.id,
+    firstName: result.firstName,
+    lastName: result.lastName,
+    phoneNumber: result.phoneNumber,
+  });
+});
 
 // get data from body (email, plainPassword)
 // hash password
 // check in db for a match of both email and hashed password
-// if foud, return the user data (without the password)
+// if found, return the user data (without the password)
 // if not return error status, saying that username or password are incorrect
 
-userRouter.post("/signup", (req, res) => {
+userRouter.post("/signup", async (req, res) => {
   const user = req.body;
+  // when we get the data from the browser, this is how it looks:
   //   {
   //     email: "user@example.com",
   //     password: "123456",
@@ -71,7 +100,8 @@ userRouter.post("/signup", (req, res) => {
     return res.status(400).send({ message: "Email already exist" });
   }
 
-  const hashedPassword = hashPassword(user.password);
+  const hashedPassword = await hashPassword(user.password);
+  console.log(hashedPassword);
   USERS.push({
     id: randomId(),
     email: user.email,
@@ -81,12 +111,7 @@ userRouter.post("/signup", (req, res) => {
     phoneNumber: user.phoneNumber,
   });
 
+  // TODO: return only relevant details
   res.json(USERS.at(-1));
 });
 module.exports = { userRouter };
-
-// this file should contain user routes
-
-/// login \ signin
-
-// register \ signup
