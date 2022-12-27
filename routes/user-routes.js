@@ -37,10 +37,20 @@ userRouter.post("/login", async (request, response) => {
   // email: "user@example.com"
   // password: "123456"
   const { email, password } = request.body;
+
+  if (!password || !email) {
+    return res.status(400).send({ message: "Some fields are missing" });
+  }
+
+  // check if user exists in our database
   const result = USERS.find((user) => user.email === email);
-  bcrypt.compareSync(password, result.password);
-  // result: user / undefined
   if (!result) {
+    return response.status(400).send({ message: "Invalid Email or Password" });
+  }
+
+  // check if password is correct
+  const passwordIsValid = bcrypt.compareSync(password, result.password);
+  if (!passwordIsValid) {
     return response.status(400).send({ message: "Invalid Email or Password" });
   }
 
@@ -114,4 +124,5 @@ userRouter.post("/signup", async (req, res) => {
   // TODO: return only relevant details
   res.json(USERS.at(-1));
 });
+
 module.exports = { userRouter };

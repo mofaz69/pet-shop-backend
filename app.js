@@ -3,6 +3,7 @@ const cors = require("cors");
 const { petRouter } = require("./routes/pet-routes");
 const { userRouter } = require("./routes/user-routes");
 const bcrypt = require("bcrypt");
+const fileUpload = require("express-fileupload");
 const app = express();
 
 app.use(cors());
