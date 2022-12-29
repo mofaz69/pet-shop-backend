@@ -1,21 +1,5 @@
 const { createPet, getPetById } = require("../dal/pet-dal");
 
-// http://localhost:3000/pets/1
-// petId = 1
-// params - parameters in the request' urls
-petRouter.get("/:petId", (req, res) => {
-  const petId = req.params.petId; //1
-  const pet = PETS.find((pet) => pet.id === petId);
-  res.json(pet);
-});
-
-petRouter.get("/", function (req, res) {
-  console.log("getting all pets");
-
-  // return response in json format
-  res.json(PETS);
-});
-
 function validatePetData(pet) {
   if (pet.id) {
     return "Cannot set pet id";

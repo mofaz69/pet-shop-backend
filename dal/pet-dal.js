@@ -5,11 +5,11 @@ async function createPet(pet) {
   return Pet.findById({ petId: pet.petId });
 }
 
-function getPETById(petId) {
+function getPetById(petId) {
   return Pet.findOne({ petId });
 }
 
 module.exports = {
   createPet,
-  getPETById,
+  getPetById,
 };
