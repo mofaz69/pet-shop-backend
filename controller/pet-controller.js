@@ -1,24 +1,4 @@
-const { Router, application } = require("express");
-const petRouter = new Router();
-
-//Type (dog, cat), Name, Adoption Status, Picture, Height, Weight, Color, Bio, Hypoallergenic (yes/no), dietary restrictions,
-// breed of animal (Poodle, Siamese)
-const PETS = [
-  {
-    id: "1",
-    type: "cat",
-    name: "avi",
-    color: "white",
-    adoptionStatus: "",
-    picture: "",
-    height: 182,
-    weight: 80,
-    bio: "found in east jerusalem",
-    hypoallergenic: false,
-    dietaryRestrictions: "none",
-    breed: "Siamese",
-  },
-];
+const { createPet, getPetById } = require("../dal/pet-dal");
 
 // http://localhost:3000/pets/1
 // petId = 1
