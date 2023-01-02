@@ -9,6 +9,8 @@ function getPetById(petId) {
   return Pet.findOne({ petId });
 }
 
+//get all pets (use find())
+
 module.exports = {
   createPet,
   getPetById,

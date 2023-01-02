@@ -1,4 +1,10 @@
 const { Router, application } = require("express");
+const {
+  createNewPet,
+  updatePet,
+  findPetById,
+  getAllPets,
+} = require("../controller/pet-controller");
 const petRouter = new Router();
 
 //Type (dog, cat), Name, Adoption Status, Picture, Height, Weight, Color, Bio, Hypoallergenic (yes/no), dietary restrictions,
@@ -20,21 +26,12 @@ const PETS = [
   },
 ];
 
+petRouter.post("/", createNewPet);
+petRouter.put("/:petId", updatePet);
 // http://localhost:3000/pets/1
-// petId = 1
-// params - parameters in the request' urls
-petRouter.get("/:petId", (req, res) => {
-  const petId = req.params.petId; //1
-  const pet = PETS.find((pet) => pet.id === petId);
-  res.json(pet);
-});
+petRouter.get("/:petId", findPetById);
 
-petRouter.get("/", function (req, res) {
-  console.log("getting all pets");
-
-  // return response in json format
-  res.json(PETS);
-});
+petRouter.get("/", getAllPets);
 
 // petRouter.put("/:petId", (req, res) => {
 //   const { image } = req.files;

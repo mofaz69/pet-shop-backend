@@ -54,4 +54,34 @@ async function signup(req, res) {
   }
 }
 
-module.exports = { signup };
+const login = async (request, response) => {
+  // email: "user@example.com"
+  // password: "123456"
+  const { email, password } = request.body;
+
+  if (!password || !email) {
+    return res.status(400).send({ message: "Some fields are missing" });
+  }
+
+  // check if user exists in our database
+  const user = await getUserByEmail(email);
+  if (!user) {
+    return response.status(400).send({ message: "Invalid Email or Password" });
+  }
+
+  // check if password match
+  const passwordIsValid = bcrypt.compareSync(password, user.password);
+  if (!passwordIsValid) {
+    return response.status(400).send({ message: "Invalid Email or Password" });
+  }
+
+  response.json({
+    email: user.email,
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    phoneNumber: user.phoneNumber,
+  });
+};
+
+module.exports = { signup, login };

@@ -1,4 +1,4 @@
-const { createPet, getPetById } = require("../dal/pet-dal");
+const {} = require("../dal/pet-dal");
 
 function validatePetData(pet) {
   if (pet.id) {
@@ -12,7 +12,10 @@ function validatePetData(pet) {
     !pet.height ||
     !pet.weight ||
     !pet.bio ||
-    pet.hypoallergenic === undefined ||
+    // falsy = null, undefined, 0, '', false
+    // !undefined // true
+    // !false // true
+    pet.hypoallergenic === undefined || // true - valid, false - valid
     !pet.dietaryRestrictions ||
     !pet.breed
   ) {
@@ -20,8 +23,7 @@ function validatePetData(pet) {
   }
 }
 
-// create new pet
-petRouter.post("/", function (req, res) {
+function createNewPet(req, res) {
   const pet = req.body;
   const validationResult = validatePetData(pet);
   if (validationResult) {
@@ -29,12 +31,11 @@ petRouter.post("/", function (req, res) {
   }
 
   // check if pet has all details
-
   PETS.push(pet);
   res.send("success");
-});
+}
 
-petRouter.put("/:petId", (req, res) => {
+function updatePet(req, res) {
   // inputs
   const petId = req.params.petId;
   const petData = req.body;
@@ -57,12 +58,18 @@ petRouter.put("/:petId", (req, res) => {
   }
 
   res.json(petToEdit);
-});
+}
 
-// petRouter.put("/:petId", (req, res) => {
-//   const { image } = req.files;
-//   if (!image) return res.sendStatus(400);
-//   image.mv(__dirname + ":/petId" + image.name);
-//   res.sendStatus(200);
-// });
-module.exports = { petRouter };
+function findPetById(req, res) {
+  const petId = req.params.petId; //1
+  const pet = [].find((pet) => pet.id === petId);
+  res.json(pet);
+}
+
+function getAllPets(req, res) {
+  console.log("getting all pets");
+  /// connect to the function from dal
+  res.json({});
+}
+
+module.exports = { createNewPet, updatePet, findPetById, getAllPets };

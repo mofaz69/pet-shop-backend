@@ -24,35 +24,7 @@ const USERS = [
 ];
 
 // POST  localhost:3000/user/login
-userRouter.post("/login", async (request, response) => {
-  // email: "user@example.com"
-  // password: "123456"
-  const { email, password } = request.body;
-
-  if (!password || !email) {
-    return res.status(400).send({ message: "Some fields are missing" });
-  }
-
-  // check if user exists in our database
-  const result = USERS.find((user) => user.email === email);
-  if (!result) {
-    return response.status(400).send({ message: "Invalid Email or Password" });
-  }
-
-  // check if password is correct
-  const passwordIsValid = bcrypt.compareSync(password, result.password);
-  if (!passwordIsValid) {
-    return response.status(400).send({ message: "Invalid Email or Password" });
-  }
-
-  response.json({
-    email: result.email,
-    id: result.id,
-    firstName: result.firstName,
-    lastName: result.lastName,
-    phoneNumber: result.phoneNumber,
-  });
-});
+userRouter.post("/login", userController.login);
 
 // get data from body (email, plainPassword)
 // hash password

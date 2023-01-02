@@ -36,6 +36,7 @@ const petSchema = new mongoose.Schema({
   },
   hypoallergenic: {
     type: Boolean,
+    required: true,
   },
   dietaryRestrictions: {
     type: String,
