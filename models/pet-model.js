@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const petSchema = new mongoose.Schema({
   // id is auto-generated and called "_id"
-  typePet: {
+  type: {
     type: String,
     required: true,
   },
@@ -14,9 +14,9 @@ const petSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  adoptionStatus: {
+  owner: {
     type: String,
-    required: true,
+    default: "",
   },
   picture: {
     type: String,

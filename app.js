@@ -1,13 +1,15 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const { petRouter } = require("./routes/pet-routes");
 const { userRouter } = require("./routes/user-routes");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json()); // puts json data on req.body
+app.use(cookieParser()); // puts json data on req.body
 app.use(express.urlencoded({ extended: true })); // puts form data on req.body
 
 app.use("/pet", petRouter);

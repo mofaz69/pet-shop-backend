@@ -4,34 +4,19 @@ const {
   updatePet,
   findPetById,
   getAllPets,
+  adoptPet,
 } = require("../controller/pet-controller");
+const { requireLogin } = require("../middleware/require-login");
 const petRouter = new Router();
 
-//Type (dog, cat), Name, Adoption Status, Picture, Height, Weight, Color, Bio, Hypoallergenic (yes/no), dietary restrictions,
-// breed of animal (Poodle, Siamese)
-const PETS = [
-  {
-    id: "1",
-    type: "cat",
-    name: "avi",
-    color: "white",
-    adoptionStatus: "",
-    picture: "",
-    height: 182,
-    weight: 80,
-    bio: "found in east jerusalem",
-    hypoallergenic: false,
-    dietaryRestrictions: "none",
-    breed: "Siamese",
-  },
-];
-
-petRouter.post("/", createNewPet);
+petRouter.post("/", requireLogin, createNewPet);
 petRouter.put("/:petId", updatePet);
 // http://localhost:3000/pets/1
 petRouter.get("/:petId", findPetById);
 
 petRouter.get("/", getAllPets);
+
+petRouter.post("/adopt", requireLogin, adoptPet);
 
 // petRouter.put("/:petId", (req, res) => {
 //   const { image } = req.files;

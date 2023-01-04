@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const { createUser, getUserByEmail } = require("../dal/user-dal");
 const bcrypt = require("bcrypt");
 
@@ -74,14 +75,20 @@ const login = async (request, response) => {
   if (!passwordIsValid) {
     return response.status(400).send({ message: "Invalid Email or Password" });
   }
-
-  response.json({
+  const userData = {
+    _id: user._id,
     email: user.email,
-    id: user.id,
     firstName: user.firstName,
     lastName: user.lastName,
     phoneNumber: user.phoneNumber,
-  });
+  };
+
+  // TODO: move jwtSecret to env file
+  const token = jwt.sign(userData, "jwtSecret", { expiresIn: "2 days" }); //"10h", "7d"
+  const twoDays = 2 * 24 * 60 * 60 * 1000;
+  response.cookie("jwt", token, { secure: true, maxAge: twoDays });
+
+  response.json(userData);
 };
 
 module.exports = { signup, login };

@@ -1,4 +1,4 @@
-const {} = require("../dal/pet-dal");
+const petDal = require("../dal/pet-dal");
 
 function validatePetData(pet) {
   if (pet.id) {
@@ -23,16 +23,19 @@ function validatePetData(pet) {
   }
 }
 
-function createNewPet(req, res) {
-  const pet = req.body;
-  const validationResult = validatePetData(pet);
-  if (validationResult) {
-    return res.status(400).send(validationResult);
-  }
+async function createNewPet(req, res) {
+  try {
+    const pet = req.body;
+    const validationResult = validatePetData(pet);
+    if (validationResult) {
+      return res.status(400).send(validationResult);
+    }
 
-  // check if pet has all details
-  PETS.push(pet);
-  res.send("success");
+    const newPet = await petDal.createPet(pet);
+    res.json(newPet);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 }
 
 function updatePet(req, res) {
@@ -66,10 +69,17 @@ function findPetById(req, res) {
   res.json(pet);
 }
 
-function getAllPets(req, res) {
+async function getAllPets(req, res) {
   console.log("getting all pets");
-  /// connect to the function from dal
-  res.json({});
+  const pets = await petDal.getAllPets();
+  res.json(pets);
 }
 
-module.exports = { createNewPet, updatePet, findPetById, getAllPets };
+async function adoptPet(req, res) {
+  const petId = req.body.petId;
+  const ownerId = req.user._id;
+  await petDal.adoptPet(petId, ownerId);
+  res.json({ message: "adopted successfully!" });
+}
+
+module.exports = { createNewPet, updatePet, findPetById, getAllPets, adoptPet };

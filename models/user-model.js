@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  favoritePets: {
+    type: [String],
+    default: [],
+  },
 });
 
 const User = mongoose.model("users", userSchema);
