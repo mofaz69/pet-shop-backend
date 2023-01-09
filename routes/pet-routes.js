@@ -18,10 +18,4 @@ petRouter.get("/", getAllPets);
 
 petRouter.post("/adopt", requireLogin, adoptPet);
 
-// petRouter.put("/:petId", (req, res) => {
-//   const { image } = req.files;
-//   if (!image) return res.sendStatus(400);
-//   image.mv(__dirname + ":/petId" + image.name);
-//   res.sendStatus(200);
-// });
 module.exports = { petRouter };

@@ -10,7 +10,7 @@ function requireLogin(req, res, next) {
   jwt.verify(req.cookies.jwt, "jwtSecret", (error, decodedToken) => {
     if (error) {
       console.log(error);
-      res.status(403).send("not authorized");
+      return res.status(403).send("not authorized");
     } else {
       req.user = decodedToken;
       next();
