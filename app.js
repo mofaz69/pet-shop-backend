@@ -8,9 +8,9 @@ const { userRouter } = require("./routes/user-routes");
 const app = express();
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
-app.use(express.json()); // puts json data on req.body
-app.use(cookieParser()); // puts json data on req.body
-app.use(express.urlencoded({ extended: true })); // puts form data on req.body
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/pet", petRouter);
 app.use("/user", userRouter);

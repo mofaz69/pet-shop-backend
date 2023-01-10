@@ -56,8 +56,6 @@ async function signup(req, res) {
 }
 
 const login = async (request, response) => {
-  // email: "user@example.com"
-  // password: "123456"
   const { email, password } = request.body;
 
   if (!password || !email) {
@@ -84,7 +82,7 @@ const login = async (request, response) => {
   };
 
   // TODO: move jwtSecret to env file
-  const token = jwt.sign(userData, "jwtSecret", { expiresIn: "2 days" }); //"10h", "7d"
+  const token = jwt.sign(userData, "jwtSecret", { expiresIn: "2 days" });
   const twoDays = 2 * 24 * 60 * 60 * 1000;
   response.cookie("jwt", token, { secure: true, maxAge: twoDays });
 
