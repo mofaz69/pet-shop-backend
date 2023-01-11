@@ -78,6 +78,7 @@ const login = async (request, response) => {
     lastName: user.lastName,
     phoneNumber: user.phoneNumber,
     favoritePets: user.favoritePets,
+    isAdmin: user.isAdmin,
   };
 
   const token = jwt.sign(userData, process.env.JWT, { expiresIn: "2 days" });

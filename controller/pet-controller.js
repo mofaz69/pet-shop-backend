@@ -82,6 +82,11 @@ async function adoptPet(req, res) {
   await petDal.adoptPet(petId, ownerId);
   res.json({ message: "adopted successfully!" });
 }
+async function unadoptPet(req, res) {
+  const petId = req.body.petId;
+  await petDal.adoptPet(petId);
+  res.json({ message: "unadopted successfully!" });
+}
 
 async function savePetToUser(req, res) {
   const petId = req.body.petId;
@@ -97,4 +102,5 @@ module.exports = {
   getAllPets,
   adoptPet,
   savePetToUser,
+  unadoptPet,
 };

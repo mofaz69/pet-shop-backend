@@ -6,6 +6,7 @@ const {
   getAllPets,
   adoptPet,
   savePetToUser,
+  unadoptPet,
 } = require("../controller/pet-controller");
 const { requireLogin } = require("../middleware/require-login");
 const petRouter = new Router();
@@ -16,6 +17,7 @@ petRouter.put("/:petId", updatePet);
 petRouter.get("/:petId", findPetById);
 petRouter.get("/", getAllPets);
 petRouter.post("/adopt", requireLogin, adoptPet);
+petRouter.post("/unadopt", requireLogin, unadoptPet);
 petRouter.post("/save", requireLogin, savePetToUser);
 
 module.exports = { petRouter };

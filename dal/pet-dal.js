@@ -19,6 +19,11 @@ function adoptPet(petId, ownerId) {
   return Pet.findByIdAndUpdate(petId, { owner: ownerId });
 }
 
+function unadoptPet(petId) {
+  console.log(petId);
+  return Pet.findByIdAndUpdate(petId, { owner: "" });
+}
+
 //get all pets (use find())
 
 module.exports = {
