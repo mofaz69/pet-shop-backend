@@ -2,10 +2,8 @@ const jwt = require("jsonwebtoken");
 const { createUser, getUserByEmail } = require("../dal/user-dal");
 const bcrypt = require("bcrypt");
 
-const saltRounds = 10;
-
 async function hashPassword(plainPassword) {
-  const salt = await bcrypt.genSalt(saltRounds);
+  const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(plainPassword, salt);
   return hashedPassword;
 }
@@ -79,10 +77,10 @@ const login = async (request, response) => {
     firstName: user.firstName,
     lastName: user.lastName,
     phoneNumber: user.phoneNumber,
+    favoritePets: user.favoritePets,
   };
 
-  // TODO: move jwtSecret to env file
-  const token = jwt.sign(userData, "jwtSecret", { expiresIn: "2 days" });
+  const token = jwt.sign(userData, process.env.JWT, { expiresIn: "2 days" });
   const twoDays = 2 * 24 * 60 * 60 * 1000;
   response.cookie("jwt", token, { secure: true, maxAge: twoDays });
 

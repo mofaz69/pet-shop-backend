@@ -1,4 +1,5 @@
 const petDal = require("../dal/pet-dal");
+const userDal = require("../dal/user-dal");
 
 function validatePetData(pet) {
   if (pet.id) {
@@ -82,4 +83,18 @@ async function adoptPet(req, res) {
   res.json({ message: "adopted successfully!" });
 }
 
-module.exports = { createNewPet, updatePet, findPetById, getAllPets, adoptPet };
+async function savePetToUser(req, res) {
+  const petId = req.body.petId;
+  const userId = req.user._id;
+  await userDal.savePetToUser(petId, userId);
+  res.json({ message: "Pet saved successfully!" });
+}
+
+module.exports = {
+  createNewPet,
+  updatePet,
+  findPetById,
+  getAllPets,
+  adoptPet,
+  savePetToUser,
+};

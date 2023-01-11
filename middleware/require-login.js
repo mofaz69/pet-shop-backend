@@ -7,7 +7,7 @@ function requireLogin(req, res, next) {
     res.redirect("/login");
   }
 
-  jwt.verify(req.cookies.jwt, "jwtSecret", (error, decodedToken) => {
+  jwt.verify(req.cookies.jwt, process.env.JWT, (error, decodedToken) => {
     if (error) {
       console.log(error);
       return res.status(403).send("not authorized");

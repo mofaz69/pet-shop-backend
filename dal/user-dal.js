@@ -9,7 +9,12 @@ function getUserByEmail(email) {
   return User.findOne({ email });
 }
 
+function savePetToUser(petId, userId) {
+  return User.findByIdAndUpdate(userId, { $push: { favoritePets: petId } });
+}
+
 module.exports = {
   createUser,
+  savePetToUser,
   getUserByEmail,
 };

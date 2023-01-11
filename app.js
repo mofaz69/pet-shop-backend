@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -16,15 +17,16 @@ app.use("/pet", petRouter);
 app.use("/user", userRouter);
 
 mongoose.set("strictQuery", true);
-mongoose
-  .connect(
-    "mongodb+srv://admin:admin@cluster0.znbqpcc.mongodb.net/?retryWrites=true&w=majority"
-  )
-  .then(() => {
-    console.log("Connected to MongoDB");
-  });
+mongoose.connect(process.env.MONGO_URI).then(() => {
+  console.log("Connected to MongoDB");
+});
 
-const PORT = 3001;
+const PORT =
+  process.env.STATUS === "production"
+    ? process.env.PROD_PORT
+    : process.env.DEV_PORT;
 app.listen(PORT, () => {
-  console.log("Server is listening on port", PORT);
+  console.log(
+    `Server in ${process.env.STATUS} mode, listening on port:${PORT}`
+  );
 });

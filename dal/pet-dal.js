@@ -1,4 +1,5 @@
 const { Pet } = require("../models/pet-model");
+const { User } = require("../models/user-model");
 
 async function createPet(pet) {
   const newPet = await Pet.create(pet);
@@ -17,6 +18,7 @@ function adoptPet(petId, ownerId) {
   console.log(ownerId);
   return Pet.findByIdAndUpdate(petId, { owner: ownerId });
 }
+
 //get all pets (use find())
 
 module.exports = {
