@@ -18,7 +18,8 @@ function validatePetData(pet) {
     // !false // true
     pet.hypoallergenic === undefined || // true - valid, false - valid
     !pet.dietaryRestrictions ||
-    !pet.breed
+    !pet.breed ||
+    !pet.imageUrl
   ) {
     return "pet must have:name, type, color, height, weight, bio, hypoallergenic, dietaryRestrictions, breed";
   }
