@@ -96,6 +96,18 @@ async function savePetToUser(req, res) {
   res.json({ message: "Pet saved successfully!" });
 }
 
+// const deletePet = async (req, res) => {
+//   try {
+//     const { petId } = req.params;
+//     const deleted = await Pet.deletePetModal({ _id: petId });
+//     if (deleted.deletedPet) {
+//       res.send({ ok: true, deletedId: petId });
+//     }
+//   } catch (err) {
+//     res.status(500).send(err);
+//   }
+// };
+
 module.exports = {
   createNewPet,
   updatePet,
@@ -104,4 +116,5 @@ module.exports = {
   adoptPet,
   savePetToUser,
   unadoptPet,
+  // deletePet,
 };

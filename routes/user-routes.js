@@ -15,13 +15,12 @@ const USERS = [
     phoneNumber: "0585858585",
   },
 ];
-const filteredPets = pets.filter(
-  (pet) => pet.name.includes(PetContext) || pet.otherField.includes(PetContext)
-);
 
 // POST  localhost:3000/user/login
 userRouter.post("/login", userController.login);
 
 userRouter.post("/signup", userController.signup, filteredPets);
+
+userRouter.get("/search-pet", userController.searchPet);
 
 module.exports = { userRouter, PetContext };

@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
-const { createUser, getUserByEmail } = require("../dal/user-dal");
+const { createUser, getUserByEmail, searchPet } = require("../dal/user-dal");
 const bcrypt = require("bcrypt");
+const { Pet } = require("../models/pet-model");
 
 async function hashPassword(plainPassword) {
   const salt = await bcrypt.genSalt();
@@ -88,4 +89,16 @@ const login = async (request, response) => {
   response.json(userData);
 };
 
-module.exports = { signup, login };
+async function searchPet(req, res) {
+  try {
+    const { search } = req.query;
+    const result = await Pet.searchPet(search);
+    return res.status(200).json(result);
+  } catch (err) {
+    return res.status(err.code).json({ error: err.error });
+  }
+}
+
+module.exports = postController;
+
+module.exports = { signup, login, searchPet };

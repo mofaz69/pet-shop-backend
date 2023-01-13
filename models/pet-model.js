@@ -52,15 +52,6 @@ const petSchema = new mongoose.Schema({
   },
 });
 
-async function deletePetModel(petId) {
-  try {
-    const deleted = await Pet.deleteOne({ _id: petId });
-    console.log(deleted);
-    return deleted;
-  } catch (err) {
-    console.log(err);
-  }
-}
-const Pet = mongoose.model("pets", petSchema, deletePetModel);
+const Pet = mongoose.model("pets", petSchema);
 
 module.exports = { Pet };

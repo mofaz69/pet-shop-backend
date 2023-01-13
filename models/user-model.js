@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   // id is auto-generated and called "_id"
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+    required: true,
+  },
   email: {
     type: String,
     required: true,
@@ -30,6 +35,8 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  collection: { User },
+  timestamps: true,
 });
 
 const User = mongoose.model("users", userSchema);

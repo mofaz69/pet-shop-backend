@@ -13,8 +13,13 @@ function savePetToUser(petId, userId) {
   return User.findByIdAndUpdate(userId, { $push: { favoritePets: petId } });
 }
 
+function searchPet(petId) {
+  return User.findById({ petId });
+}
+
 module.exports = {
   createUser,
   savePetToUser,
   getUserByEmail,
+  searchPet,
 };
