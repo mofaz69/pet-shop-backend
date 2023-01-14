@@ -10,8 +10,8 @@ function getPetById(petId) {
   return Pet.findOne({ petId });
 }
 
-function getAllPets() {
-  return Pet.find();
+async function getAllPets() {
+  return await Pet.find();
 }
 function adoptPet(petId, ownerId) {
   console.log(petId);
@@ -24,11 +24,16 @@ function unadoptPet(petId) {
   return Pet.findByIdAndUpdate(petId, { owner: "" });
 }
 
+function searchPetByQuery(query) {
+  return Pet.find(query);
+}
+
 //get all pets (use find())
 
 module.exports = {
   createPet,
   getAllPets,
   getPetById,
+  searchPetByQuery,
   adoptPet,
 };

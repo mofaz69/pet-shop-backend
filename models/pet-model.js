@@ -18,10 +18,6 @@ const petSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  picture: {
-    type: String,
-    required: true,
-  },
   height: {
     type: String,
     required: true,

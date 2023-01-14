@@ -28,12 +28,13 @@ function validatePetData(pet) {
 async function createNewPet(req, res) {
   try {
     const pet = req.body;
+    console.log(pet);
     const validationResult = validatePetData(pet);
     if (validationResult) {
-      return res.status(400).send(validationResult);
+      return res.status(400).json({ message: validationResult });
     }
-
-    const newPet = await petDal.createPet(pet);
+    const hypoallergenic = pet.hypoallergenic === "Yes";
+    const newPet = await petDal.createPet({ ...pet, hypoallergenic });
     res.json(newPet);
   } catch (err) {
     res.status(500).send(err);

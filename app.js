@@ -17,9 +17,11 @@ app.use("/pet", petRouter);
 app.use("/user", userRouter);
 
 mongoose.set("strictQuery", true);
-mongoose.connect(process.env.MONGO_URI).then(() => {
-  console.log("Connected to MongoDB");
-});
+
+mongoose.connection.on("error", (err) => console.error(err));
+mongoose.connection.once("open", () => console.log("Connected to MongoDB"));
+
+mongoose.connect(process.env.MONGO_URI);
 
 const PORT =
   process.env.STATUS === "production"
