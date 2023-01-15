@@ -8,10 +8,11 @@ const {
   savePetToUser,
   unadoptPet,
 } = require("../controller/pet-controller");
+const { requireAdmin } = require("../middleware/require-admin");
 const { requireLogin } = require("../middleware/require-login");
 const petRouter = new Router();
 
-petRouter.post("/", requireLogin, createNewPet);
+petRouter.post("/", [requireLogin, requireAdmin], createNewPet);
 petRouter.put("/:petId", updatePet);
 // endpoint: GET + http://localhost:3000/pets/1
 petRouter.get("/:petId", findPetById);
