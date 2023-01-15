@@ -14,8 +14,13 @@ function savePetToUser(petId, userId) {
   return User.findByIdAndUpdate(userId, { $push: { favoritePets: petId } });
 }
 
+function getUsers(filter = {}) {
+  return User.find(filter).select("-password");
+}
+
 module.exports = {
   createUser,
+  getUsers,
   savePetToUser,
   getUserByEmail,
 };
