@@ -42,7 +42,6 @@ async function createNewPet(req, res) {
 }
 
 function updatePet(req, res) {
-  // inputs
   const petId = req.params.petId;
   const petData = {
     ...req.body,
