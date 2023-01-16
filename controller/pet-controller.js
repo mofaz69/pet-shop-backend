@@ -44,7 +44,10 @@ async function createNewPet(req, res) {
 function updatePet(req, res) {
   // inputs
   const petId = req.params.petId;
-  const petData = req.body;
+  const petData = {
+    ...req.body,
+    hypoallergenic: req.body.hypoallergenic === "Yes",
+  };
 
   // validate data
   const validationResult = validatePetData(petData);
@@ -52,18 +55,9 @@ function updatePet(req, res) {
     return res.status(400).send(validationResult);
   }
 
-  // find pet to edit
-  const petToEdit = PETS.find((pet) => pet.id === petId);
-  if (!petToEdit) {
-    return res.status(400).send({ message: "Id not found" });
-  }
+  petDal.updatePet(petId, petData);
 
-  // update the pet
-  for (const [key, value] of Object.entries(petData)) {
-    petToEdit[key] = value;
-  }
-
-  res.json(petToEdit);
+  res.json(petData);
 }
 
 function findPetById(req, res) {
@@ -79,35 +73,36 @@ async function getAllPets(req, res) {
 }
 
 async function adoptPet(req, res) {
-  const petId = req.body.petId;
+  const petId = req.params.petId;
   const ownerId = req.user._id;
   await petDal.adoptPet(petId, ownerId);
   res.json({ message: "adopted successfully!" });
 }
-async function unadoptPet(req, res) {
-  const petId = req.body.petId;
-  await petDal.adoptPet(petId);
-  res.json({ message: "unadopted successfully!" });
+async function returnPet(req, res) {
+  const petId = req.params.petId;
+  await petDal.returnPet(petId);
+  res.json({ message: "returned pet successfully!" });
 }
 
 async function savePetToUser(req, res) {
-  const petId = req.body.petId;
+  const petId = req.params.petId;
   const userId = req.user._id;
   await userDal.savePetToUser(petId, userId);
   res.json({ message: "Pet saved successfully!" });
 }
 
-// const deletePet = async (req, res) => {
-//   try {
-//     const { petId } = req.params;
-//     const deleted = await Pet.deletePetModal({ _id: petId });
-//     if (deleted.deletedPet) {
-//       res.send({ ok: true, deletedId: petId });
-//     }
-//   } catch (err) {
-//     res.status(500).send(err);
-//   }
-// };
+async function removePetFromUser(req, res) {
+  const petId = req.params.petId;
+  const userId = req.user._id;
+  await userDal.removePetFromUser(petId, userId);
+  res.json({ message: "Pet removed successfully!" });
+}
+
+async function findPetByUserId(req, res) {
+  const userId = req.params.userId;
+  const pets = await petDal.getPetByUserId(userId);
+  res.json(pets);
+}
 
 module.exports = {
   createNewPet,
@@ -116,6 +111,7 @@ module.exports = {
   getAllPets,
   adoptPet,
   savePetToUser,
-  unadoptPet,
-  // deletePet,
+  returnPet,
+  removePetFromUser,
+  findPetByUserId,
 };

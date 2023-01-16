@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
-const { createUser, getUserByEmail, getUsers } = require("../dal/user-dal");
+const userDal = require("../dal/user-dal");
 const bcrypt = require("bcrypt");
-const { searchPetByQuery } = require("../dal/pet-dal");
+const { searchPetByQuery, getPetByUserId } = require("../dal/pet-dal");
 const { Pet } = require("../models/pet-model");
 
 async function hashPassword(plainPassword) {
@@ -10,37 +10,79 @@ async function hashPassword(plainPassword) {
   return hashedPassword;
 }
 
+function validateUserData(user) {
+  if (
+    !user.password ||
+    !user.email ||
+    !user.firstName ||
+    !user.lastName ||
+    !user.phoneNumber
+  ) {
+    return "Some fields are missing";
+  }
+
+  if (user.password !== user.passwordRepeat) {
+    return "Passwords do not match";
+  }
+  if (user.password.length < 6) {
+    return "Passwords too short, minimum 6 chars";
+  }
+}
+
+async function updateUser(req, res) {
+  try {
+    console.log("Updating user");
+    const updatedUserData = req.body;
+    const userId = req.params.userId;
+
+    const validationErrorMessage = validateUserData(updatedUserData);
+    if (validationErrorMessage) {
+      return res.status(400).send({ message: validationErrorMessage });
+    }
+
+    if (updatedUserData.email !== req.user.email) {
+      const emailAlreadyExist = await userDal.getUserByEmail(
+        updatedUserData.email
+      );
+      if (emailAlreadyExist) {
+        return res
+          .status(400)
+          .send({ message: "New email address already used" });
+      }
+    }
+
+    const hashedPassword = await hashPassword(updatedUserData.password);
+    const updatedUser = await userDal.updateUser(userId, {
+      ...updatedUserData,
+      password: hashedPassword,
+      isAdmin: req.user.isAdmin,
+    });
+
+    // TODO: return only relevant details
+    res.json(updatedUser);
+  } catch (err) {
+    return res.status(400).send({ message: err.message });
+  }
+}
+
 async function signup(req, res) {
   try {
     console.log("Registering user");
     const user = req.body;
 
     // validate user object
-    if (
-      !user.password ||
-      !user.email ||
-      !user.firstName ||
-      !user.lastName ||
-      !user.phoneNumber
-    ) {
-      return res.status(400).send({ message: "Some fields are missing" });
-    }
-    if (user.password !== user.passwordRepeat) {
-      return res.status(400).send({ message: "Passwords do not match" });
+    const validationErrorMessage = validateUserData(user);
+    if (validationErrorMessage) {
+      return res.status(400).send({ message: validationErrorMessage });
     }
 
-    if (user.password.length < 6) {
-      return res
-        .status(400)
-        .send({ message: "Passwords too short, minimum 6 chars" });
-    }
-    const isUserExist = await getUserByEmail(user.email);
+    const isUserExist = await userDal.getUserByEmail(user.email);
     if (isUserExist) {
       return res.status(400).send({ message: "Email already exist" });
     }
 
     const hashedPassword = await hashPassword(user.password);
-    const newUser = await createUser({
+    const newUser = await userDal.createUser({
       email: user.email,
       password: hashedPassword,
       firstName: user.firstName,
@@ -63,7 +105,7 @@ const login = async (request, response) => {
   }
 
   // check if user exists in our database
-  const user = await getUserByEmail(email);
+  const user = await userDal.getUserByEmail(email);
   if (!user) {
     return response.status(400).send({ message: "Invalid Email or Password" });
   }
@@ -102,10 +144,10 @@ async function searchPet(req, res) {
 
 async function getAllUsers(req, res) {
   try {
-    const users = await getUsers();
+    const users = await userDal.getUsers();
     const ownedPets = {};
     for (const user of users) {
-      ownedPets[user._id] = await Pet.find({ owner: user._id });
+      ownedPets[user._id] = await getPetByUserId(user._id);
     }
     res.json({ users, ownedPets });
   } catch (err) {
@@ -113,4 +155,21 @@ async function getAllUsers(req, res) {
   }
 }
 
-module.exports = { signup, login, searchPet, getAllUsers };
+async function getUserById(req, res) {
+  const { userId } = req.params;
+  try {
+    const user = await userDal.getUserById(userId);
+    res.json({ user });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+}
+
+module.exports = {
+  signup,
+  login,
+  searchPet,
+  getAllUsers,
+  getUserById,
+  updateUser,
+};

@@ -5,17 +5,33 @@ async function createUser(user) {
   return User.findOne({ email: user.email }).select("-password");
 }
 
+async function updateUser(userId, userData) {
+  return User.findOneAndReplace({ _id: userId }, userData).select("-password");
+}
+
 async function getUserByEmail(email) {
   const user = await User.findOne({ email });
   return user;
 }
+async function getUserById(userId) {
+  const user = await User.findById(userId);
+  return user;
+}
 
 function savePetToUser(petId, userId) {
-  return User.findByIdAndUpdate(userId, { $push: { favoritePets: petId } });
+  return User.findByIdAndUpdate(
+    userId,
+    { $push: { favoritePets: petId } },
+    { returnDocument: "after" }
+  );
 }
 
 function getUsers(filter = {}) {
   return User.find(filter).select("-password");
+}
+
+function removePetFromUser(petId, userId) {
+  return User.findByIdAndUpdate(userId, { $pull: { favoritePets: petId } });
 }
 
 module.exports = {
@@ -23,4 +39,7 @@ module.exports = {
   getUsers,
   savePetToUser,
   getUserByEmail,
+  removePetFromUser,
+  getUserById,
+  updateUser,
 };

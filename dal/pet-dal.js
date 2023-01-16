@@ -6,6 +6,12 @@ async function createPet(pet) {
   return newPet;
 }
 
+async function updatePet(petId, petData) {
+  console.log(petId);
+  console.log(petData);
+  return Pet.findByIdAndUpdate(petId, petData);
+}
+
 function getPetById(petId) {
   return Pet.findOne({ petId });
 }
@@ -19,13 +25,17 @@ function adoptPet(petId, ownerId) {
   return Pet.findByIdAndUpdate(petId, { owner: ownerId });
 }
 
-function unadoptPet(petId) {
+function returnPet(petId) {
   console.log(petId);
   return Pet.findByIdAndUpdate(petId, { owner: "" });
 }
 
 function searchPetByQuery(query) {
   return Pet.find(query);
+}
+
+function getPetByUserId(userId) {
+  return Pet.find({ owner: userId });
 }
 
 //get all pets (use find())
@@ -36,4 +46,7 @@ module.exports = {
   getPetById,
   searchPetByQuery,
   adoptPet,
+  updatePet,
+  returnPet,
+  getPetByUserId,
 };
