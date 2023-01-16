@@ -5,27 +5,35 @@ const { searchPetByQuery, getPetByUserId } = require("../dal/pet-dal");
 const { Pet } = require("../models/pet-model");
 
 async function hashPassword(plainPassword) {
-  const salt = await bcrypt.genSalt();
-  const hashedPassword = await bcrypt.hash(plainPassword, salt);
-  return hashedPassword;
+  try {
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(plainPassword, salt);
+    return hashedPassword;
+  } catch (err) {
+    res.status(500).send(err);
+  }
 }
 
 function validateUserData(user) {
-  if (
-    !user.password ||
-    !user.email ||
-    !user.firstName ||
-    !user.lastName ||
-    !user.phoneNumber
-  ) {
-    return "Some fields are missing";
-  }
+  try {
+    if (
+      !user.password ||
+      !user.email ||
+      !user.firstName ||
+      !user.lastName ||
+      !user.phoneNumber
+    ) {
+      return "Some fields are missing";
+    }
 
-  if (user.password !== user.passwordRepeat) {
-    return "Passwords do not match";
-  }
-  if (user.password.length < 6) {
-    return "Passwords too short, minimum 6 chars";
+    if (user.password !== user.passwordRepeat) {
+      return "Passwords do not match";
+    }
+    if (user.password.length < 6) {
+      return "Passwords too short, minimum 6 chars";
+    }
+  } catch (err) {
+    res.status(500).send(err);
   }
 }
 
@@ -56,8 +64,6 @@ async function updateUser(req, res) {
       password: hashedPassword,
       isAdmin: req.user.isAdmin,
     });
-
-    // TODO: return only relevant details
     res.json(updatedUser);
   } catch (err) {
     return res.status(400).send({ message: err.message });
@@ -87,8 +93,6 @@ async function signup(req, res) {
       lastName: user.lastName,
       phoneNumber: user.phoneNumber,
     });
-
-    // TODO: return only relevant details
     res.json(newUser);
   } catch (err) {
     return res.status(400).send({ message: err.message });
@@ -96,38 +100,42 @@ async function signup(req, res) {
 }
 
 const login = async (request, response) => {
-  const { email, password } = request.body;
+  try {
+    const { email, password } = request.body;
 
-  if (!password || !email) {
-    return res.status(400).send({ message: "Some fields are missing" });
+    if (!password || !email) {
+      return res.status(400).send({ message: "Some fields are missing" });
+    }
+    const user = await userDal.getUserByEmail(email);
+    if (!user) {
+      return response
+        .status(400)
+        .send({ message: "Invalid Email or Password" });
+    }
+    const passwordIsValid = bcrypt.compareSync(password, user.password);
+    if (!passwordIsValid) {
+      return response
+        .status(400)
+        .send({ message: "Invalid Email or Password" });
+    }
+    const userData = {
+      _id: user._id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phoneNumber: user.phoneNumber,
+      favoritePets: user.favoritePets,
+      isAdmin: user.isAdmin,
+    };
+
+    const token = jwt.sign(userData, process.env.JWT, { expiresIn: "2 days" });
+    const twoDays = 2 * 24 * 60 * 60 * 1000;
+    response.cookie("jwt", token, { secure: true, maxAge: twoDays });
+
+    response.json(userData);
+  } catch (err) {
+    res.status(500).send(err);
   }
-
-  // check if user exists in our database
-  const user = await userDal.getUserByEmail(email);
-  if (!user) {
-    return response.status(400).send({ message: "Invalid Email or Password" });
-  }
-
-  // check if password match
-  const passwordIsValid = bcrypt.compareSync(password, user.password);
-  if (!passwordIsValid) {
-    return response.status(400).send({ message: "Invalid Email or Password" });
-  }
-  const userData = {
-    _id: user._id,
-    email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    phoneNumber: user.phoneNumber,
-    favoritePets: user.favoritePets,
-    isAdmin: user.isAdmin,
-  };
-
-  const token = jwt.sign(userData, process.env.JWT, { expiresIn: "2 days" });
-  const twoDays = 2 * 24 * 60 * 60 * 1000;
-  response.cookie("jwt", token, { secure: true, maxAge: twoDays });
-
-  response.json(userData);
 };
 
 async function searchPet(req, res) {
