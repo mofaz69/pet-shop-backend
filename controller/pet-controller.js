@@ -67,7 +67,6 @@ function findPetById(req, res) {
 }
 
 async function getAllPets(req, res) {
-  console.log("getting all pets");
   const pets = await petDal.getAllPets();
   res.json(pets);
 }

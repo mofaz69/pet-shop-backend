@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 
 function requireLogin(req, res, next) {
-  console.log("requireLogin");
   if (!req.cookies?.jwt) {
     return res.status(403).json("not authorized - missing jwt token");
   }

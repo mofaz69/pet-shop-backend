@@ -31,7 +31,6 @@ function validateUserData(user) {
 
 async function updateUser(req, res) {
   try {
-    console.log("Updating user");
     const updatedUserData = req.body;
     const userId = req.params.userId;
 
@@ -67,7 +66,6 @@ async function updateUser(req, res) {
 
 async function signup(req, res) {
   try {
-    console.log("Registering user");
     const user = req.body;
 
     // validate user object

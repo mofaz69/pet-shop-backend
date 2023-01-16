@@ -1,6 +1,4 @@
 function requireAdmin(req, res, next) {
-  console.log("requireAdmin");
-
   if (req.user.isAdmin) {
     return next();
   }
