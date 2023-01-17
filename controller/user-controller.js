@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const userDal = require("../dal/user-dal");
 const bcrypt = require("bcrypt");
-const { searchPetByQuery, getPetByUserId } = require("../dal/pet-dal");
+const { searchPetByQuery, getPetsByUserId } = require("../dal/pet-dal");
 const { Pet } = require("../models/pet-model");
 
 async function hashPassword(plainPassword) {
@@ -74,7 +74,6 @@ async function signup(req, res) {
   try {
     const user = req.body;
 
-    // validate user object
     const validationErrorMessage = validateUserData(user);
     if (validationErrorMessage) {
       return res.status(400).send({ message: validationErrorMessage });
@@ -153,7 +152,7 @@ async function getAllUsers(req, res) {
     const users = await userDal.getUsers();
     const ownedPets = {};
     for (const user of users) {
-      ownedPets[user._id] = await getPetByUserId(user._id);
+      ownedPets[user._id] = await getPetsByUserId(user._id);
     }
     res.json({ users, ownedPets });
   } catch (err) {
@@ -165,7 +164,9 @@ async function getUserById(req, res) {
   const { userId } = req.params;
   try {
     const user = await userDal.getUserById(userId);
-    res.json({ user });
+    res.json({
+      user: { ...user.toObject(), ownedPets: await getPetsByUserId(user._id) },
+    });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

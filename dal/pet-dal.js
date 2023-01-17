@@ -34,11 +34,9 @@ function searchPetByQuery(query) {
   return Pet.find(query);
 }
 
-function getPetByUserId(userId) {
+function getPetsByUserId(userId) {
   return Pet.find({ owner: userId });
 }
-
-//get all pets (use find())
 
 module.exports = {
   createPet,
@@ -48,5 +46,5 @@ module.exports = {
   adoptPet,
   updatePet,
   returnPet,
-  getPetByUserId,
+  getPetsByUserId,
 };

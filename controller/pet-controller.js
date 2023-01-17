@@ -50,7 +50,6 @@ function updatePet(req, res) {
       hypoallergenic: req.body.hypoallergenic === "Yes",
     };
 
-    // validate data
     const validationResult = validatePetData(petData);
     if (validationResult) {
       return res.status(400).send(validationResult);

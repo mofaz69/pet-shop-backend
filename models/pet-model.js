@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const petSchema = new mongoose.Schema({
-  // id is auto-generated and called "_id"
   type: {
     type: String,
     required: true,

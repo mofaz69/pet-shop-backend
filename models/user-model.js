@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  // id is auto-generated and called "_id"
   email: {
     type: String,
     required: true,

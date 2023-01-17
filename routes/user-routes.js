@@ -5,7 +5,7 @@ const { requireAdmin } = require("../middleware/require-admin");
 const { requireLogin } = require("../middleware/require-login");
 
 userRouter.get("/", [requireLogin, requireAdmin], userController.getAllUsers);
-userRouter.get("/:userId", userController.getUserById);
+userRouter.get("/:userId/full", userController.getUserById);
 userRouter.put("/:userId", requireLogin, userController.updateUser);
 
 userRouter.post("/login", userController.login);
