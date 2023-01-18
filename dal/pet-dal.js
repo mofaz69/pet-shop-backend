@@ -1,5 +1,4 @@
 const { Pet } = require("../models/pet-model");
-const { User } = require("../models/user-model");
 
 async function createPet(pet) {
   const newPet = await Pet.create(pet);

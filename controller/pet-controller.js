@@ -65,7 +65,7 @@ function updatePet(req, res) {
 
 function findPetById(req, res) {
   try {
-    const petId = req.params.petId; //1
+    const petId = req.params.petId;
     const pet = [].find((pet) => pet.id === petId);
     res.json(pet);
   } catch (err) {
