@@ -2,34 +2,29 @@ const petDal = require("../dal/pet-dal");
 const userDal = require("../dal/user-dal");
 
 function validatePetData(pet) {
-  try {
-    if (pet.id) {
-      return "Cannot set pet id";
-    }
+  if (pet.id) {
+    return "Cannot set pet id";
+  }
 
-    if (
-      !pet.name ||
-      !pet.type ||
-      !pet.color ||
-      !pet.height ||
-      !pet.weight ||
-      !pet.bio ||
-      pet.hypoallergenic === undefined ||
-      !pet.dietaryRestrictions ||
-      !pet.breed ||
-      !pet.imageUrl
-    ) {
-      return "pet must have:name, type, color, height, weight, bio, hypoallergenic, dietaryRestrictions, breed";
-    }
-  } catch (err) {
-    res.status(500).send(err);
+  if (
+    !pet.name ||
+    !pet.type ||
+    !pet.color ||
+    !pet.height ||
+    !pet.weight ||
+    !pet.bio ||
+    pet.hypoallergenic === undefined ||
+    !pet.dietaryRestrictions ||
+    !pet.breed ||
+    !pet.imageUrl
+  ) {
+    return "pet must have:name, type, color, height, weight, bio, hypoallergenic, dietaryRestrictions, breed";
   }
 }
 
 async function createNewPet(req, res) {
   try {
     const pet = req.body;
-    console.log(pet);
     const validationResult = validatePetData(pet);
     if (validationResult) {
       return res.status(400).json({ message: validationResult });
