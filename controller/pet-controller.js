@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const petDal = require("../dal/pet-dal");
 const userDal = require("../dal/user-dal");
 
@@ -25,24 +27,42 @@ function validatePetData(pet) {
 async function createNewPet(req, res) {
   try {
     const pet = req.body;
-    const validationResult = validatePetData(pet);
+
+    fs.renameSync(
+      req.file.path, // temp location
+      path.join(process.cwd(), "static", "images", req.file.originalname) // final location
+    );
+    const imageUrl = `http://localhost:3001/static/images/${req.file.originalname}`;
+
+    const validationResult = validatePetData({ ...pet, imageUrl });
     if (validationResult) {
       return res.status(400).json({ message: validationResult });
     }
     const hypoallergenic = pet.hypoallergenic === "Yes";
-    const newPet = await petDal.createPet({ ...pet, hypoallergenic });
+    const newPet = await petDal.createPet({ ...pet, hypoallergenic, imageUrl });
     res.json(newPet);
   } catch (err) {
-    res.status(500).send(err);
+    console.log(err);
+    res.status(500).json({ message: err.message });
   }
 }
 
 function updatePet(req, res) {
+  let imageUrl = req.body.imageUrl;
+  if (req.file) {
+    fs.renameSync(
+      req.file.path, // temp location
+      path.join(process.cwd(), "static", "images", req.file.originalname) // final location
+    );
+    imageUrl = `http://localhost:3001/static/images/${req.file.originalname}`;
+  }
+
   try {
     const petId = req.params.petId;
     const petData = {
       ...req.body,
       hypoallergenic: req.body.hypoallergenic === "Yes",
+      imageUrl,
     };
 
     const validationResult = validatePetData(petData);

@@ -1,4 +1,6 @@
-const { Router, application } = require("express");
+const { Router } = require("express");
+const path = require("path");
+const multer = require("multer");
 const {
   createNewPet,
   updatePet,
@@ -14,8 +16,20 @@ const { requireAdmin } = require("../middleware/require-admin");
 const { requireLogin } = require("../middleware/require-login");
 const petRouter = new Router();
 
-petRouter.post("/", [requireLogin, requireAdmin], createNewPet);
-petRouter.put("/:petId", [requireLogin, requireAdmin], updatePet);
+const staticFilesFolder = path.join(process.cwd(), "static");
+const tempDir = path.join(staticFilesFolder, "temp");
+const upload = multer({ dest: tempDir });
+
+petRouter.post(
+  "/",
+  [requireLogin, requireAdmin, upload.single("image")],
+  createNewPet
+);
+petRouter.put(
+  "/:petId",
+  [requireLogin, requireAdmin, upload.single("image")],
+  updatePet
+);
 petRouter.get("/:petId", findPetById);
 petRouter.get("/user/:userId", findPetByUserId);
 petRouter.get("/", getAllPets);
