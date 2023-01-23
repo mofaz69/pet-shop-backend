@@ -1,5 +1,19 @@
 const { Pet } = require("../models/pet-model");
 
+// async function updateTypes() {
+//   const pets = await getAllPets();
+//   for (const pet of pets) {
+//     pet.weight = +pet.weight;
+//     pet.height = pet.height;
+//     await Pet.findByIdAndUpdate(pet._id, {
+//       weight: +pet.weight,
+//       height: +pet.height,
+//     });
+//     console.log("saved: " + pet.name);
+//   }
+// }
+// updateTypes();
+
 async function createPet(pet) {
   const newPet = await Pet.create(pet);
   return newPet;

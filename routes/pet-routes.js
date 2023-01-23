@@ -11,6 +11,7 @@ const {
   returnPet,
   removePetFromUser,
   findPetByUserId,
+  getPetsByQuery,
 } = require("../controller/pet-controller");
 const { requireAdmin } = require("../middleware/require-admin");
 const { requireLogin } = require("../middleware/require-login");
@@ -25,6 +26,7 @@ petRouter.post(
   [requireLogin, requireAdmin, upload.single("image")],
   createNewPet
 );
+petRouter.post("/search", getPetsByQuery);
 petRouter.put(
   "/:petId",
   [requireLogin, requireAdmin, upload.single("image")],

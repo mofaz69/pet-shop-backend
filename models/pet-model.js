@@ -18,11 +18,11 @@ const petSchema = new mongoose.Schema({
     default: "",
   },
   height: {
-    type: String,
+    type: Number,
     required: true,
   },
   weight: {
-    type: String,
+    type: Number,
     required: true,
   },
   bio: {

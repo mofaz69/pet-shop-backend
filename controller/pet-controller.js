@@ -88,6 +88,58 @@ function findPetById(req, res) {
   }
 }
 
+async function getPetsByQuery(req, res) {
+  try {
+    const rawQuery = req.body;
+
+    console.log(rawQuery);
+
+    const query = {};
+
+    if (rawQuery.name) {
+      query.name = { $regex: rawQuery.name, $options: "i" };
+    }
+    if (rawQuery.type) {
+      query.type = { $regex: rawQuery.type, $options: "i" };
+    }
+    if (rawQuery.minHeight) {
+      query.height = { $gte: rawQuery.minHeight };
+    }
+
+    if (rawQuery.maxHeight) {
+      query.height = {
+        ...(query.height ? query.height : {}),
+        $lte: rawQuery.maxHeight,
+      };
+    }
+
+    if (rawQuery.minWeight) {
+      query.weight = { $gte: rawQuery.minWeight };
+    }
+
+    if (rawQuery.maxWeight) {
+      query.weight = {
+        ...(query.weight ? query.weight : {}),
+        $lte: rawQuery.maxHeight,
+      };
+    }
+
+    if (rawQuery.adoptionStatus && rawQuery.adoptionStatus !== "all") {
+      if (rawQuery.adoptionStatus === "available") {
+        query.owner = { $eq: "" };
+      } else {
+        query.owner = { $ne: "" };
+      }
+    }
+    console.log(query);
+
+    const pets = await petDal.searchPetByQuery(query);
+    res.json(pets);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+}
+
 async function getAllPets(req, res) {
   try {
     const pets = await petDal.getAllPets();
@@ -159,4 +211,5 @@ module.exports = {
   returnPet,
   removePetFromUser,
   findPetByUserId,
+  getPetsByQuery,
 };
