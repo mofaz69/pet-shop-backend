@@ -38,6 +38,12 @@ function adoptPet(petId, ownerId) {
   return Pet.findByIdAndUpdate(petId, { owner: ownerId });
 }
 
+function fosterPet(petId, ownerId) {
+  console.log(petId);
+  console.log(ownerId);
+  return Pet.findByIdAndUpdate(petId, { owner: ownerId });
+}
+
 function returnPet(petId) {
   console.log(petId);
   return Pet.findByIdAndUpdate(petId, { owner: "" });
@@ -57,6 +63,7 @@ module.exports = {
   getPetById,
   searchPetByQuery,
   adoptPet,
+  fosterPet,
   updatePet,
   returnPet,
   getPetsByUserId,

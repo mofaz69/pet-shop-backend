@@ -7,6 +7,7 @@ const {
   findPetById,
   getAllPets,
   adoptPet,
+  fosterPet,
   savePetToUser,
   returnPet,
   removePetFromUser,
@@ -36,6 +37,7 @@ petRouter.get("/:petId", findPetById);
 petRouter.get("/user/:userId", findPetByUserId);
 petRouter.get("/", getAllPets);
 petRouter.post("/:petId/adopt", requireLogin, adoptPet);
+petRouter.post("/:petId/foster", requireLogin, fosterPet);
 petRouter.post("/:petId/return", requireLogin, returnPet);
 petRouter.post("/:petId/save", requireLogin, savePetToUser);
 petRouter.delete("/:petId/save", requireLogin, removePetFromUser);

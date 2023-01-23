@@ -159,6 +159,16 @@ async function adoptPet(req, res) {
     res.status(500).send(err);
   }
 }
+async function fosterPet(req, res) {
+  try {
+    const petId = req.params.petId;
+    const ownerId = req.user._id;
+    await petDal.fosterPet(petId, ownerId);
+    res.json({ message: "foster successfully!" });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+}
 async function returnPet(req, res) {
   try {
     const petId = req.params.petId;
@@ -207,6 +217,7 @@ module.exports = {
   findPetById,
   getAllPets,
   adoptPet,
+  fosterPet,
   savePetToUser,
   returnPet,
   removePetFromUser,
