@@ -17,6 +17,10 @@ const petSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  fosterer: {
+    type: String,
+    default: "",
+  },
   height: {
     type: Number,
     required: true,

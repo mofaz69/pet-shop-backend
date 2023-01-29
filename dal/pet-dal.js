@@ -1,18 +1,11 @@
 const { Pet } = require("../models/pet-model");
 
-// async function updateTypes() {
-//   const pets = await getAllPets();
+// (async function () {
+//   const pets = await Pet.find();
 //   for (const pet of pets) {
-//     pet.weight = +pet.weight;
-//     pet.height = pet.height;
-//     await Pet.findByIdAndUpdate(pet._id, {
-//       weight: +pet.weight,
-//       height: +pet.height,
-//     });
-//     console.log("saved: " + pet.name);
+//     await Pet.findByIdAndUpdate(pet.id, { fosterer: "" });
 //   }
-// }
-// updateTypes();
+// })();
 
 async function createPet(pet) {
   const newPet = await Pet.create(pet);
@@ -33,20 +26,19 @@ async function getAllPets() {
   return await Pet.find();
 }
 function adoptPet(petId, ownerId) {
-  console.log(petId);
-  console.log(ownerId);
   return Pet.findByIdAndUpdate(petId, { owner: ownerId });
 }
 
-function fosterPet(petId, ownerId) {
-  console.log(petId);
-  console.log(ownerId);
-  return Pet.findByIdAndUpdate(petId, { owner: ownerId });
+function fosterPet(petId, fostererId) {
+  return Pet.findByIdAndUpdate(petId, { fosterer: fostererId });
 }
 
 function returnPet(petId) {
   console.log(petId);
   return Pet.findByIdAndUpdate(petId, { owner: "" });
+}
+function returnPetFromFoster(petId) {
+  return Pet.findByIdAndUpdate(petId, { fosterer: "" });
 }
 
 function searchPetByQuery(query) {
@@ -58,6 +50,7 @@ function getPetsByUserId(userId) {
 }
 
 module.exports = {
+  returnPetFromFoster,
   createPet,
   getAllPets,
   getPetById,

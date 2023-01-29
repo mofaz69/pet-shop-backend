@@ -13,6 +13,7 @@ const {
   removePetFromUser,
   findPetByUserId,
   getPetsByQuery,
+  returnPetFromFoster,
 } = require("../controller/pet-controller");
 const { requireAdmin } = require("../middleware/require-admin");
 const { requireLogin } = require("../middleware/require-login");
@@ -39,6 +40,7 @@ petRouter.get("/", getAllPets);
 petRouter.post("/:petId/adopt", requireLogin, adoptPet);
 petRouter.post("/:petId/foster", requireLogin, fosterPet);
 petRouter.post("/:petId/return", requireLogin, returnPet);
+petRouter.post("/:petId/return-foster", requireLogin, returnPetFromFoster);
 petRouter.post("/:petId/save", requireLogin, savePetToUser);
 petRouter.delete("/:petId/save", requireLogin, removePetFromUser);
 

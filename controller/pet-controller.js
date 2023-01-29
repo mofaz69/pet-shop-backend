@@ -127,11 +127,13 @@ async function getPetsByQuery(req, res) {
     if (rawQuery.adoptionStatus && rawQuery.adoptionStatus !== "all") {
       if (rawQuery.adoptionStatus === "available") {
         query.owner = { $eq: "" };
+      } else if (rawQuery.adoptionStatus === "foster") {
+        query.fosterer = { $ne: "" };
       } else {
+        // adopted status - owner equals userId that owns the pet
         query.owner = { $ne: "" };
       }
     }
-    console.log(query);
 
     const pets = await petDal.searchPetByQuery(query);
     res.json(pets);
@@ -164,7 +166,7 @@ async function fosterPet(req, res) {
     const petId = req.params.petId;
     const ownerId = req.user._id;
     await petDal.fosterPet(petId, ownerId);
-    res.json({ message: "foster successfully!" });
+    res.json({ message: "fostered successfully!" });
   } catch (err) {
     res.status(500).send(err);
   }
@@ -173,6 +175,16 @@ async function returnPet(req, res) {
   try {
     const petId = req.params.petId;
     await petDal.returnPet(petId);
+    res.json({ message: "returned pet successfully!" });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+}
+
+async function returnPetFromFoster(req, res) {
+  try {
+    const petId = req.params.petId;
+    await petDal.returnPetFromFoster(petId);
     res.json({ message: "returned pet successfully!" });
   } catch (err) {
     res.status(500).send(err);
@@ -223,4 +235,5 @@ module.exports = {
   removePetFromUser,
   findPetByUserId,
   getPetsByQuery,
+  returnPetFromFoster,
 };
