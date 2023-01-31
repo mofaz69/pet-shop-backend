@@ -1,12 +1,5 @@
 const { Pet } = require("../models/pet-model");
 
-// (async function () {
-//   const pets = await Pet.find();
-//   for (const pet of pets) {
-//     await Pet.findByIdAndUpdate(pet.id, { fosterer: "" });
-//   }
-// })();
-
 async function createPet(pet) {
   const newPet = await Pet.create(pet);
   return newPet;

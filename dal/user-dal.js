@@ -21,6 +21,7 @@ async function getUserById(userId) {
 function savePetToUser(petId, userId) {
   return User.findByIdAndUpdate(
     userId,
+    // pushes the petId to favoritesPets array
     { $push: { favoritePets: petId } },
     { returnDocument: "after" }
   );
