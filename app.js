@@ -15,6 +15,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })); // parses formData, and places it on req.body
 
 app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, "static-frontend")));
 
 app.use("/pet", petRouter);
 app.use("/user", userRouter);
@@ -27,7 +28,7 @@ mongoose.connection.once("open", () => console.log("Connected to MongoDB"));
 mongoose.connect(process.env.MONGO_URI);
 
 const PORT =
-  process.env.STATUS === "production"
+  process.env.PORT || process.env.STATUS === "production"
     ? process.env.PROD_PORT
     : process.env.DEV_PORT;
 app.listen(PORT, () => {
