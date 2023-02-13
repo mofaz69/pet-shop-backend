@@ -3,7 +3,7 @@ const path = require("path");
 const petDal = require("../dal/pet-dal");
 const userDal = require("../dal/user-dal");
 const domain =
-  process.env.NODE_ENV === "production" ? "" : "http://localhost:3001";
+  process.env.STATUS === "production" ? "" : "http://localhost:3001";
 
 function validatePetData(pet) {
   if (pet.id) {
