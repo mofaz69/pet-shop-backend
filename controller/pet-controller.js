@@ -2,6 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const petDal = require("../dal/pet-dal");
 const userDal = require("../dal/user-dal");
+const domain =
+  process.env.NODE_ENV === "production" ? "" : "http://localhost:3001";
 
 function validatePetData(pet) {
   if (pet.id) {
@@ -32,7 +34,7 @@ async function createNewPet(req, res) {
       req.file.path, // temp location
       path.join(process.cwd(), "static", "images", req.file.originalname) // final location
     );
-    const imageUrl = `http://localhost:3001/static/images/${req.file.originalname}`;
+    const imageUrl = `${domain}/static/images/${req.file.originalname}`;
 
     const validationResult = validatePetData({ ...pet, imageUrl });
     if (validationResult) {
@@ -54,7 +56,7 @@ function updatePet(req, res) {
       req.file.path, // temp location
       path.join(process.cwd(), "static", "images", req.file.originalname) // final location
     );
-    imageUrl = `http://localhost:3001/static/images/${req.file.originalname}`;
+    imageUrl = `${domain}/static/images/${req.file.originalname}`;
   }
 
   try {
