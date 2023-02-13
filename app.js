@@ -27,12 +27,9 @@ mongoose.connection.once("open", () => console.log("Connected to MongoDB"));
 
 mongoose.connect(process.env.MONGO_URI);
 
-const PORT =
-  process.env.PORT || process.env.STATUS === "production"
-    ? process.env.PROD_PORT
-    : process.env.DEV_PORT;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(
-    `Server in ${process.env.STATUS} mode, listening on port:${PORT}`
+    `Server in ${process.env.STATUS} mode, listening on port: ${PORT}`
   );
 });
